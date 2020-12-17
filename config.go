@@ -1,11 +1,15 @@
 package weather
 
+import "time"
+
 // Config is used for configuration and dependency injection.
 type Config struct {
-	BaseURL       string
-	APIKey        string
-	ServerAddress string
-	Units         Unit
+	BaseURL            string
+	APIKey             string
+	ServerAddress      string
+	CacheExpiration    string
+	CacheExpirationDur time.Duration
+	Units              Unit
 }
 
 // Unit provides a type for setting the unit of the open weather API.

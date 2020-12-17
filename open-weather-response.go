@@ -7,6 +7,26 @@ import (
 	"time"
 )
 
+var directions = []string{
+	"north",
+	"north-northeast",
+	"northeast",
+	"east-northeast",
+	"east",
+	"east-southeast",
+	"southeast",
+	"south-southeast",
+	"south",
+	"south-southwest",
+	"southwest",
+	"west-southwest",
+	"west",
+	"west-northwest",
+	"northwest",
+	"north-northwest",
+	"north",
+}
+
 // OpenWeatherResponse is the object for the response from open weather's /weather endpoint.
 type OpenWeatherResponse struct {
 	Coord      Coord     `json:"coord"`
@@ -124,26 +144,5 @@ func windDescription(speed float64) string {
 // windDirection converts degrees to wind direction
 func windDirection(direction int) string {
 	direction = direction % 360
-
-	directions := []string{
-		"north",
-		"north-northeast",
-		"northeast",
-		"east-northeast",
-		"east",
-		"east-southeast",
-		"southeast",
-		"south-southeast",
-		"south",
-		"south-southwest",
-		"southwest",
-		"west-southwest",
-		"west",
-		"west-northwest",
-		"northwest",
-		"north-northwest",
-		"north",
-	}
-
 	return directions[int(math.Round(float64(direction)/22.5))]
 }

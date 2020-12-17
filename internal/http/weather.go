@@ -19,7 +19,7 @@ type WeatherHandler struct {
 
 // NewWeatherHandler returns a new instance of the weather http handler.
 func NewWeatherHandler(cfg *weather.Config) *WeatherHandler {
-	return &WeatherHandler{cfg: cfg, responseCache: cache.New(2*time.Minute, time.Minute)}
+	return &WeatherHandler{cfg: cfg, responseCache: cache.New(cfg.CacheExpirationDur, time.Minute)}
 }
 
 // ServeHTTP handles a weather request.

@@ -3,15 +3,18 @@ package os
 import (
 	"errors"
 	"os"
+	"time"
 
 	"github.com/mpfrancis/weather"
+	"github.com/sirupsen/logrus"
 )
 
 const (
-	envBaseURL = "WEATHER_BASEURL"
-	envAPIKey  = "WEATHER_APIKEY"
-	envUnits   = "WEATHER_UNITS"
-	envAddr    = "SERVER_ADDRESS"
+	envBaseURL         = "WEATHER_BASEURL"
+	envAPIKey          = "WEATHER_APIKEY"
+	envUnits           = "WEATHER_UNITS"
+	envAddr            = "SERVER_ADDRESS"
+	envCacheExpiration = "CACHE_EXPIRATION"
 )
 
 var (
@@ -29,6 +32,7 @@ func GetConfig() (*weather.Config, error) {
 	cfg.APIKey = os.Getenv(envAPIKey)
 	cfg.Units = weather.Unit(os.Getenv(envUnits))
 	cfg.ServerAddress = os.Getenv(envAddr)
+	cfg.CacheExpiration = os.Getenv(envCacheExpiration)
 
 	if cfg.BaseURL == "" {
 		return nil, errMissingBaseURL
@@ -48,6 +52,15 @@ func GetConfig() (*weather.Config, error) {
 
 	if cfg.ServerAddress == "" {
 		cfg.ServerAddress = ":10000"
+	}
+
+	var err error
+	cfg.CacheExpirationDur, err = time.ParseDuration(cfg.CacheExpiration)
+	if err != nil {
+		if cfg.CacheExpiration != "" {
+			logrus.Warn("Unable to parse cache expiration, defaulting to two minutes")
+		}
+		cfg.CacheExpirationDur = 2 * time.Minute
 	}
 
 	return &cfg, nil
