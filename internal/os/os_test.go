@@ -13,15 +13,18 @@ type Case struct {
 	name           string
 	baseURL        string
 	apiKey         string
+	units          string
 	expectedError  error
 	expectedConfig *weather.Config
 }
 
 func TestGetConfig(t *testing.T) {
 	cases := []Case{
-		{"Success", "url", "key", nil, &weather.Config{BaseURL: "url", APIKey: "key"}},
-		{"Missing URL", "", "key", MissingBaseURL, nil},
-		{"Missing API Key", "url", "", MissingAPIKey, nil},
+		{"Success", "url", "key", "imperial", nil, &weather.Config{BaseURL: "url", APIKey: "key", Units: "imperial"}},
+		{"Default Metric", "url", "key", "", nil, &weather.Config{BaseURL: "url", APIKey: "key", Units: "metric"}},
+		{"Missing URL", "", "key", "", MissingBaseURL, nil},
+		{"Missing API Key", "url", "", "", MissingAPIKey, nil},
+		{"Invalid Units", "url", "key", "abc", InvalidUnits, nil},
 	}
 
 	for i := range cases {
@@ -29,6 +32,9 @@ func TestGetConfig(t *testing.T) {
 			t.Fatal(err)
 		}
 		if err := os.Setenv(envAPIKey, cases[i].apiKey); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.Setenv(envUnits, cases[i].units); err != nil {
 			t.Fatal(err)
 		}
 

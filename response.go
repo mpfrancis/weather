@@ -1,6 +1,6 @@
 package weather
 
-type Response struct {
+type HumanReadableResponse struct {
 	LocationName   string   `json:"location_name"`
 	Temperature    string   `json:"temperature"`
 	Wind           string   `json:"wind"`
