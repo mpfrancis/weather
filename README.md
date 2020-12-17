@@ -1,6 +1,26 @@
 # Weather API
 This API provides the weather based on a provided location utilizing https://openweathermap.org/api. The package structure is based on https://medium.com/@benbjohnson/standard-package-layout-7cdbc8391fc1#.ds38va3pp.
 
+## Running the Code
+### Starting API
+```
+WEATHER_BASEURL=http://api.openweathermap.org/data/2.5 WEATHER_APIKEY=1508a9a4840a5574c822d70ca2132032 go run cmd/main.go
+```
+
+### Example curl command
+```
+curl 'http://localhost:10000/weather?city=Bogota&country=co&forecast=0'
+```
+
+### Configuration Options and Examples
+```
+WEATHER_BASEURL=http://api.openweathermap.org/data/2.5
+WEATHER_APIKEY=abc123
+WEATHER_UNITS=metric
+SERVER_ADDRESS=:10000
+CACHE_EXPIRATION=2m
+```
+
 ## Get Weather
 
 Get current weather information and optional forecast information. The city and country code are required.
