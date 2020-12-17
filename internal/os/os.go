@@ -15,9 +15,9 @@ const (
 )
 
 var (
-	MissingBaseURL = errors.New("WEATHER_BASEURL environment variable is required")
-	MissingAPIKey  = errors.New("WEATHER_APIKEY environment variable is required")
-	InvalidUnits   = errors.New("Invalid units, use: standard, metric, imperial. Default: metric")
+	errMissingBaseURL = errors.New("WEATHER_BASEURL environment variable is required")
+	errMissingAPIKey  = errors.New("WEATHER_APIKEY environment variable is required")
+	errInvalidUnits   = errors.New("Invalid units, use: standard, metric, imperial. Default: metric")
 )
 
 // GetConfig gets configuration environment variables and returns them in a config object.
@@ -31,11 +31,11 @@ func GetConfig() (*weather.Config, error) {
 	cfg.ServerAddress = os.Getenv(envAddr)
 
 	if cfg.BaseURL == "" {
-		return nil, MissingBaseURL
+		return nil, errMissingBaseURL
 	}
 
 	if cfg.APIKey == "" {
-		return nil, MissingAPIKey
+		return nil, errMissingAPIKey
 	}
 
 	switch cfg.Units {
@@ -43,7 +43,7 @@ func GetConfig() (*weather.Config, error) {
 	case "":
 		cfg.Units = "metric"
 	default:
-		return nil, InvalidUnits
+		return nil, errInvalidUnits
 	}
 
 	if cfg.ServerAddress == "" {

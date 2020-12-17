@@ -23,9 +23,9 @@ func TestGetConfig(t *testing.T) {
 	cases := []Case{
 		{"Success", "url", "key", "imperial", ":11000", nil, &weather.Config{BaseURL: "url", APIKey: "key", Units: "imperial", ServerAddress: ":11000"}},
 		{"Defaults", "url", "key", "", "", nil, &weather.Config{BaseURL: "url", APIKey: "key", Units: "metric", ServerAddress: ":10000"}},
-		{"Missing URL", "", "key", "", "", MissingBaseURL, nil},
-		{"Missing API Key", "url", "", "", "", MissingAPIKey, nil},
-		{"Invalid Units", "url", "key", "abc", "", InvalidUnits, nil},
+		{"Missing URL", "", "key", "", "", errMissingBaseURL, nil},
+		{"Missing API Key", "url", "", "", "", errMissingAPIKey, nil},
+		{"Invalid Units", "url", "key", "abc", "", errInvalidUnits, nil},
 	}
 
 	for i := range cases {
