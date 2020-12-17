@@ -26,7 +26,7 @@ func GetConfig() (*weather.Config, error) {
 
 	cfg.BaseURL = os.Getenv(envBaseURL)
 	cfg.APIKey = os.Getenv(envAPIKey)
-	cfg.Units = os.Getenv(envUnits)
+	cfg.Units = weather.Unit(os.Getenv(envUnits))
 
 	if cfg.BaseURL == "" {
 		return nil, MissingBaseURL

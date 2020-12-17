@@ -55,8 +55,6 @@ type Sys struct {
 	Sunset  int64  `json:"sunset"`
 }
 
-// TODO: Tests
-
 func (o *OpenWeatherResponse) ToHumanReadable(unitSymbol string) *HumanReadableResponse {
 	resp := HumanReadableResponse{
 		LocationName:   fmt.Sprintf("%s, %s", strings.Title(o.Name), strings.ToUpper(o.Sys.Country)),
@@ -68,7 +66,6 @@ func (o *OpenWeatherResponse) ToHumanReadable(unitSymbol string) *HumanReadableR
 		Sunset:         time.Unix(o.Sys.Sunset, 0).Format("15:04"),
 		GeoCoordinates: fmt.Sprintf("[%g, %g]", o.Coord.Lat, o.Coord.Lon),
 		RequestedTime:  time.Now().Format("2006-01-02 15:04:05"),
-		// TODO: Forecast:       "",
 	}
 
 	if len(o.Weather) > 0 {

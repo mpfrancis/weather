@@ -1,17 +1,22 @@
 package main
 
 import (
-	log "github.com/sirupsen/logrus"
+	"github.com/mpfrancis/weather/internal/http"
+	"github.com/mpfrancis/weather/internal/os"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {
 	if err := run(); err != nil {
-		log.Fatal(err)
+		logrus.Fatal(err)
 	}
 }
 
 func run() error {
-	// TODO
+	cfg, err := os.GetConfig()
+	if err != nil {
+		return err
+	}
 
-	return nil
+	return http.NewServer(cfg).ListenAndServe()
 }
