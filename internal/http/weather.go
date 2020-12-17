@@ -68,8 +68,8 @@ func (h *WeatherHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	forecast := r.FormValue("forecast")
 	if forecast != "" {
 		day, err := strconv.Atoi(forecast)
-		if err != nil {
-			http.Error(w, "Query parameter 'country' is required", http.StatusUnprocessableEntity)
+		if err != nil || day < 0 || 6 < day {
+			http.Error(w, "Query parameter 'forecast' is invalid, please provide a number between 0 and 6", http.StatusUnprocessableEntity)
 			return
 		}
 
