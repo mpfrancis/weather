@@ -1,9 +1,10 @@
 package weather
 
 type Config struct {
-	BaseURL string
-	APIKey  string
-	Units   Unit
+	BaseURL       string
+	APIKey        string
+	ServerAddress string
+	Units         Unit
 }
 
 type Unit string

@@ -15,11 +15,7 @@ type Server struct {
 func NewServer(cfg *weather.Config) *Server {
 	mux := http.NewServeMux()
 	mux.Handle("/weather", recovery(NewWeatherHandler(cfg)))
-
-	// TODO: Configure
-	s := &Server{&http.Server{Addr: ":10000", Handler: mux}}
-
-	return s
+	return &Server{&http.Server{Addr: cfg.ServerAddress, Handler: mux}}
 }
 
 func recovery(next http.Handler) http.Handler {

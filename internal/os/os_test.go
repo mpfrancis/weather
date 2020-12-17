@@ -14,17 +14,18 @@ type Case struct {
 	baseURL        string
 	apiKey         string
 	units          string
+	addr           string
 	expectedError  error
 	expectedConfig *weather.Config
 }
 
 func TestGetConfig(t *testing.T) {
 	cases := []Case{
-		{"Success", "url", "key", "imperial", nil, &weather.Config{BaseURL: "url", APIKey: "key", Units: "imperial"}},
-		{"Default Metric", "url", "key", "", nil, &weather.Config{BaseURL: "url", APIKey: "key", Units: "metric"}},
-		{"Missing URL", "", "key", "", MissingBaseURL, nil},
-		{"Missing API Key", "url", "", "", MissingAPIKey, nil},
-		{"Invalid Units", "url", "key", "abc", InvalidUnits, nil},
+		{"Success", "url", "key", "imperial", ":11000", nil, &weather.Config{BaseURL: "url", APIKey: "key", Units: "imperial", ServerAddress: ":11000"}},
+		{"Defaults", "url", "key", "", "", nil, &weather.Config{BaseURL: "url", APIKey: "key", Units: "metric", ServerAddress: ":10000"}},
+		{"Missing URL", "", "key", "", "", MissingBaseURL, nil},
+		{"Missing API Key", "url", "", "", "", MissingAPIKey, nil},
+		{"Invalid Units", "url", "key", "abc", "", InvalidUnits, nil},
 	}
 
 	for i := range cases {
@@ -35,6 +36,9 @@ func TestGetConfig(t *testing.T) {
 			t.Fatal(err)
 		}
 		if err := os.Setenv(envUnits, cases[i].units); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.Setenv(envAddr, cases[i].addr); err != nil {
 			t.Fatal(err)
 		}
 

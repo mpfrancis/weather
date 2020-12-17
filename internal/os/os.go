@@ -11,6 +11,7 @@ const (
 	envBaseURL = "WEATHER_BASEURL"
 	envAPIKey  = "WEATHER_APIKEY"
 	envUnits   = "WEATHER_UNITS"
+	envAddr    = "SERVER_ADDRESS"
 )
 
 var (
@@ -27,6 +28,7 @@ func GetConfig() (*weather.Config, error) {
 	cfg.BaseURL = os.Getenv(envBaseURL)
 	cfg.APIKey = os.Getenv(envAPIKey)
 	cfg.Units = weather.Unit(os.Getenv(envUnits))
+	cfg.ServerAddress = os.Getenv(envAddr)
 
 	if cfg.BaseURL == "" {
 		return nil, MissingBaseURL
@@ -42,6 +44,10 @@ func GetConfig() (*weather.Config, error) {
 		cfg.Units = "metric"
 	default:
 		return nil, InvalidUnits
+	}
+
+	if cfg.ServerAddress == "" {
+		cfg.ServerAddress = ":10000"
 	}
 
 	return &cfg, nil
