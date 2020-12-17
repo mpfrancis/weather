@@ -131,7 +131,7 @@ func TestToHumanReadable(t *testing.T) {
 					Lat: 4.61,
 					Lon: -74.08,
 				},
-				Weather: []Weather{Weather{Description: "Scattered clouds"}},
+				Weather: []Weather{{Description: "Scattered clouds"}},
 			},
 			&HumanReadableResponse{
 				LocationName:   "Bogota, CO",

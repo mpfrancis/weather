@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+// OpenWeatherResponse is the object for the response from open weather's /weather endpoint.
 type OpenWeatherResponse struct {
 	Coord      Coord     `json:"coord"`
 	Weather    []Weather `json:"weather"`
@@ -22,16 +23,22 @@ type OpenWeatherResponse struct {
 	Name       string    `json:"name"`
 	Cod        int       `json:"cod"`
 }
+
+// Coord holds the location coordinate data.
 type Coord struct {
 	Lon float64 `json:"lon"`
 	Lat float64 `json:"lat"`
 }
+
+// Weather provides a description of the current weather.
 type Weather struct {
 	ID          int    `json:"id"`
 	Main        string `json:"main"`
 	Description string `json:"description"`
 	Icon        string `json:"icon"`
 }
+
+// Main holds some general weather data.
 type Main struct {
 	Temp      float64 `json:"temp"`
 	FeelsLike float64 `json:"feels_like"`
@@ -40,13 +47,19 @@ type Main struct {
 	Pressure  int     `json:"pressure"`
 	Humidity  int     `json:"humidity"`
 }
+
+// Wind holds wind weather data.
 type Wind struct {
 	Speed float64 `json:"speed"`
 	Deg   int     `json:"deg"`
 }
+
+// Clouds holds weather data in regards to clouds.
 type Clouds struct {
 	All int `json:"all"`
 }
+
+// Sys holds some additional weather details from the open weather API.
 type Sys struct {
 	Type    int    `json:"type"`
 	ID      int    `json:"id"`
@@ -55,6 +68,7 @@ type Sys struct {
 	Sunset  int64  `json:"sunset"`
 }
 
+// ToHumanReadable converts an open weather model to a more human readable model.
 func (o *OpenWeatherResponse) ToHumanReadable(unitSymbol string) *HumanReadableResponse {
 	resp := HumanReadableResponse{
 		LocationName:   fmt.Sprintf("%s, %s", strings.Title(o.Name), strings.ToUpper(o.Sys.Country)),

@@ -11,6 +11,7 @@ import (
 	"github.com/patrickmn/go-cache"
 )
 
+// WeatherHandler is the handler for the /weather endpoint.
 type WeatherHandler struct {
 	cfg           *weather.Config
 	responseCache *cache.Cache

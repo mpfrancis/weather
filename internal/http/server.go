@@ -8,10 +8,12 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// Server is the weather API's server object.
 type Server struct {
 	*http.Server
 }
 
+// NewServer creates a new instance of the server object for serving up the API.
 func NewServer(cfg *weather.Config) *Server {
 	mux := http.NewServeMux()
 	mux.Handle("/weather", recovery(NewWeatherHandler(cfg)))
