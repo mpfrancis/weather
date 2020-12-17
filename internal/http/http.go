@@ -20,6 +20,7 @@ func NewWeatherHandler(cfg *weather.Config) *WeatherHandler {
 // ServeHTTP handles a weather request.
 // This handler will hit the open weather API and return a more human readable response.
 func (h *WeatherHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	// Parse input parameters
 	city := r.FormValue("city")
 	if city == "" {
 		http.Error(w, "Query parameter 'city' is required", http.StatusUnprocessableEntity)
@@ -32,12 +33,14 @@ func (h *WeatherHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Call open weather API
 	response, err := http.Get(fmt.Sprintf("%s?q=%s,%s&units=%s&appid=%s", h.cfg.BaseURL, city, country, h.cfg.Units, h.cfg.APIKey))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
+	// Parse the response
 	var owr weather.OpenWeatherResponse
 	if err := json.NewDecoder(response.Body).Decode(&owr); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

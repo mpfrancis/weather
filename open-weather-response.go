@@ -59,14 +59,14 @@ type Sys struct {
 
 func (o *OpenWeatherResponse) ToHumanReadable(unitSymbol string) *HumanReadableResponse {
 	resp := HumanReadableResponse{
-		LocationName:   fmt.Sprintf("%s, %s", strings.ToTitle(o.Name), strings.ToUpper(o.Sys.Country)),
-		Temperature:    fmt.Sprintf("%f %s", o.Main.Temp, unitSymbol),
-		Wind:           fmt.Sprintf("%s, %f m/s, %s", windDescription(o.Wind.Speed), o.Wind.Speed, windDirection(o.Wind.Deg)),
+		LocationName:   fmt.Sprintf("%s, %s", strings.Title(o.Name), strings.ToUpper(o.Sys.Country)),
+		Temperature:    fmt.Sprintf("%g %s", o.Main.Temp, unitSymbol),
+		Wind:           fmt.Sprintf("%s, %g m/s, %s", windDescription(o.Wind.Speed), o.Wind.Speed, windDirection(o.Wind.Deg)),
 		Pressure:       fmt.Sprintf("%d hpa", o.Main.Pressure),
 		Humidity:       fmt.Sprintf("%d%%", o.Main.Humidity),
 		Sunrise:        time.Unix(o.Sys.Sunrise, 0).Format("15:04"),
 		Sunset:         time.Unix(o.Sys.Sunset, 0).Format("15:04"),
-		GeoCoordinates: fmt.Sprintf("[%f, %f]", o.Coord.Lat, o.Coord.Lon),
+		GeoCoordinates: fmt.Sprintf("[%g, %g]", o.Coord.Lat, o.Coord.Lon),
 		RequestedTime:  time.Now().Format("2006-01-02 15:04:05"),
 		// TODO: Forecast:       "",
 	}
