@@ -3,11 +3,11 @@ package os
 import (
 	"errors"
 	"os"
-	"reflect"
 	"testing"
 	"time"
 
 	"github.com/mpfrancis/weather"
+	"github.com/stretchr/testify/assert"
 )
 
 type Case struct {
@@ -52,8 +52,6 @@ func TestGetConfig(t *testing.T) {
 			t.Fatalf("Test %s: Expected error '%s' but got '%s'", cases[i].name, cases[i].expectedError, err)
 		}
 
-		if !reflect.DeepEqual(cfg, cases[i].expectedConfig) {
-			t.Fatalf("Test %s: Expected config '%+v' but got '%+v'", cases[i].name, cases[i].expectedConfig, cfg)
-		}
+		assert.Equal(t, cfg, cases[i].expectedConfig)
 	}
 }

@@ -15,11 +15,16 @@ import (
 type WeatherHandler struct {
 	cfg           *weather.Config
 	responseCache *cache.Cache
+	client        Clienter
 }
 
 // NewWeatherHandler returns a new instance of the weather http handler.
-func NewWeatherHandler(cfg *weather.Config) *WeatherHandler {
-	return &WeatherHandler{cfg: cfg, responseCache: cache.New(cfg.CacheExpirationDur, time.Minute)}
+func NewWeatherHandler(cfg *weather.Config, client Clienter) *WeatherHandler {
+	return &WeatherHandler{
+		cfg:           cfg,
+		responseCache: cache.New(cfg.CacheExpirationDur, time.Minute),
+		client:        client,
+	}
 }
 
 // ServeHTTP handles a weather request.
@@ -49,8 +54,19 @@ func (h *WeatherHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	forecast := r.FormValue("forecast")
+	var forecastDay int
+	if forecast != "" {
+		day, err := strconv.Atoi(forecast)
+		forecastDay = day
+		if err != nil || day < 0 || 6 < day {
+			http.Error(w, "Query parameter 'forecast' is invalid, please provide a number between 0 and 6", http.StatusUnprocessableEntity)
+			return
+		}
+	}
+
 	// Call open weather API
-	response, err := http.Get(fmt.Sprintf("%s/weather?q=%s,%s&units=%s&appid=%s", h.cfg.BaseURL, city, country, h.cfg.Units, h.cfg.APIKey))
+	response, err := h.client.Get(fmt.Sprintf("%s/weather?q=%s,%s&units=%s&appid=%s", h.cfg.BaseURL, city, country, h.cfg.Units, h.cfg.APIKey))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -65,16 +81,9 @@ func (h *WeatherHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	hr := owr.ToHumanReadable(h.cfg.Units.Symbol())
 
-	forecast := r.FormValue("forecast")
 	if forecast != "" {
-		day, err := strconv.Atoi(forecast)
-		if err != nil || day < 0 || 6 < day {
-			http.Error(w, "Query parameter 'forecast' is invalid, please provide a number between 0 and 6", http.StatusUnprocessableEntity)
-			return
-		}
-
 		// Call open weather API
-		response, err := http.Get(fmt.Sprintf("%s/onecall?lat=%g&lon=%g&units=%s&appid=%s", h.cfg.BaseURL, owr.Coord.Lat, owr.Coord.Lon, h.cfg.Units, h.cfg.APIKey))
+		response, err := h.client.Get(fmt.Sprintf("%s/onecall?lat=%g&lon=%g&units=%s&appid=%s", h.cfg.BaseURL, owr.Coord.Lat, owr.Coord.Lon, h.cfg.Units, h.cfg.APIKey))
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -87,7 +96,7 @@ func (h *WeatherHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		hr.Forecast = &ocr.Daily[day]
+		hr.Forecast = &ocr.Daily[forecastDay]
 	}
 
 	h.responseCache.Set(r.URL.String(), hr, cache.DefaultExpiration)

@@ -18,5 +18,5 @@ func run() error {
 		return err
 	}
 
-	return http.NewServer(cfg).ListenAndServe()
+	return http.NewServer(cfg, http.DefaultClient).ListenAndServe()
 }

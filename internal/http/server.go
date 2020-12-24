@@ -14,9 +14,10 @@ type Server struct {
 }
 
 // NewServer creates a new instance of the server object for serving up the API.
-func NewServer(cfg *weather.Config) *Server {
+func NewServer(cfg *weather.Config, client Clienter) *Server {
 	mux := http.NewServeMux()
-	mux.Handle("/weather", recovery(NewWeatherHandler(cfg)))
+	mux.Handle("/weather", recovery(NewWeatherHandler(cfg, client)))
+	mux.HandleFunc("/healthcheck", func(w http.ResponseWriter, r *http.Request) {})
 	return &Server{&http.Server{Addr: cfg.ServerAddress, Handler: mux}}
 }
 

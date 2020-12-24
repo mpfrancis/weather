@@ -2,9 +2,10 @@ package weather
 
 import (
 	"fmt"
-	"reflect"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 type DirectionCase struct {
@@ -53,10 +54,7 @@ func TestWindDirection(t *testing.T) {
 	}
 
 	for i := range cases {
-		direction := windDirection(cases[i].degree)
-		if direction != cases[i].expectedDirection {
-			t.Fatalf("Expected %s but got %s", cases[i].expectedDirection, direction)
-		}
+		assert.Equal(t, cases[i].expectedDirection, windDirection(cases[i].degree))
 	}
 }
 
@@ -96,10 +94,7 @@ func TestWindDescription(t *testing.T) {
 	}
 
 	for i := range cases {
-		description := windDescription(cases[i].speed)
-		if description != cases[i].expectedDescription {
-			t.Fatalf("Expected %s but got %s", cases[i].expectedDescription, description)
-		}
+		assert.Equal(t, cases[i].expectedDescription, windDescription(cases[i].speed))
 	}
 }
 
@@ -150,8 +145,6 @@ func TestToHumanReadable(t *testing.T) {
 
 	for i := range cases {
 		hr := cases[i].input.ToHumanReadable(Metric.Symbol())
-		if !reflect.DeepEqual(cases[i].output, hr) {
-			t.Fatalf("Expected %+v but got %+v", cases[i].output, hr)
-		}
+		assert.Equal(t, cases[i].output, hr)
 	}
 }
